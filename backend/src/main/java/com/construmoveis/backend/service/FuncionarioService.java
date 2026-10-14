@@ -1,5 +1,6 @@
 package com.construmoveis.backend.service;
 
+import com.construmoveis.backend.dto.FuncionarioPatchDTO;
 import com.construmoveis.backend.entity.Funcionario;
 import com.construmoveis.backend.exception.FuncionarioNaoExiste;
 import com.construmoveis.backend.repository.FuncionarioRepository;
@@ -32,10 +33,28 @@ public class FuncionarioService {
         return funcionarioRepository.save(funcionarioParaCriar);
     }
 
-    public Funcionario atualizarFuncionario(Funcionario funcionarioParaAtualizar, Integer id){
-        validarId(id);
-        funcionarioParaAtualizar.setId(id);
-        return funcionarioRepository.save(funcionarioParaAtualizar);
+    public Funcionario atualizarFuncionario(FuncionarioPatchDTO funcionarioParaAtualizar, Integer id){
+        Funcionario funcionario = listarFuncionarioPorId(id);
+
+        if (funcionarioParaAtualizar.getNome() != null){
+            funcionario.setNome(funcionarioParaAtualizar.getNome());
+        }
+        if (funcionarioParaAtualizar.getEmail() != null){
+            funcionario.setEmail(funcionarioParaAtualizar.getEmail());
+        }
+        if (funcionarioParaAtualizar.getTelefone() != null){
+            funcionario.setTelefone(funcionarioParaAtualizar.getTelefone());
+        }
+        if (funcionarioParaAtualizar.getRegiao() != null){
+            funcionario.setRegiao(funcionarioParaAtualizar.getRegiao());
+        }
+        if (funcionarioParaAtualizar.getCargo() != null){
+            funcionario.setCargo(funcionarioParaAtualizar.getCargo());
+        }
+        if (funcionarioParaAtualizar.getSenha() != null){
+            funcionario.setSenha(funcionarioParaAtualizar.getSenha());
+        }
+        return funcionarioRepository.save(funcionario);
     }
 
     public void desativarFuncionario(Integer id){

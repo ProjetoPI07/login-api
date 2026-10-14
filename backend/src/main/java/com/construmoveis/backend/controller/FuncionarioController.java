@@ -1,5 +1,6 @@
 package com.construmoveis.backend.controller;
 
+import com.construmoveis.backend.dto.FuncionarioPatchDTO;
 import com.construmoveis.backend.dto.FuncionarioRequestDTO;
 import com.construmoveis.backend.dto.FuncionarioResponseDTO;
 import com.construmoveis.backend.entity.Funcionario;
@@ -40,10 +41,9 @@ public class FuncionarioController {
         return ResponseEntity.status(201).body(FuncionarioMapper.toResponse(salvo));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<FuncionarioResponseDTO> atualizarFuncionario(@PathVariable Integer id, @RequestBody FuncionarioRequestDTO request) {
-        Funcionario funcionario = FuncionarioMapper.toEntity(request);
-        Funcionario atualizado = funcionarioService.atualizarFuncionario(funcionario, id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<FuncionarioResponseDTO> atualizarFuncionario(@PathVariable Integer id, @RequestBody FuncionarioPatchDTO request) {
+        Funcionario atualizado = funcionarioService.atualizarFuncionario(request, id);
         return ResponseEntity.status(200).body(FuncionarioMapper.toResponse(atualizado));
     }
 
