@@ -1,10 +1,20 @@
 package com.construmoveis.backend.service;
 
+import com.construmoveis.backend.config.GerenciadorTokenJwt;
+import com.construmoveis.backend.dto.FuncionarioLoginDTO;
 import com.construmoveis.backend.dto.FuncionarioPatchDTO;
+import com.construmoveis.backend.dto.FuncionarioTokenDTO;
 import com.construmoveis.backend.entity.Funcionario;
 import com.construmoveis.backend.exception.FuncionarioNaoExiste;
 import com.construmoveis.backend.repository.FuncionarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +22,16 @@ import java.util.Optional;
 @Service
 public class FuncionarioService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private final FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private GerenciadorTokenJwt gerenciadorTokenJwt;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     public FuncionarioService(FuncionarioRepository funcionarioRepository) {
         this.funcionarioRepository = funcionarioRepository;
@@ -30,7 +49,31 @@ public class FuncionarioService {
 
     public Funcionario cadastrarFuncionario(Funcionario funcionarioParaCriar){
         funcionarioParaCriar.setAtivo(true);
+        String senhaCriptografada = passwordEncoder.encode(funcionarioParaCriar.getSenha());
+        funcionarioParaCriar.setSenha(senhaCriptografada);
         return funcionarioRepository.save(funcionarioParaCriar);
+    }
+
+    public FuncionarioTokenDTO autenticar(FuncionarioLoginDTO funcionario) {
+
+        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
+                funcionario.getEmail(), funcionario.getSenha());
+
+        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+
+        Funcionario funcionarioAutenticado = funcionarioRepository.findByEmail(funcionario.getEmail()).orElseThrow(() ->
+                        new ResponseStatusException(404, "Email do usuário não cadastrado", null));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final String token = gerenciadorTokenJwt.generateToken(authentication);
+
+        return new FuncionarioTokenDTO(
+                funcionarioAutenticado.getId(),
+                funcionarioAutenticado.getNome(),
+                funcionarioAutenticado.getEmail(),
+                token
+        );
     }
 
     public Funcionario atualizarFuncionario(FuncionarioPatchDTO funcionarioParaAtualizar, Integer id){
