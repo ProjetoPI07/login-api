@@ -1,11 +1,19 @@
 package com.construmoveis.backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class FuncionarioPatchDTO {
+    @Schema(description = "Nome do funcionário", example = "Maria Lima")
     private String nome;
+    @Schema(description = "Email  do funcionário", example = "maria@example.com")
     private String email;
+    @Schema(description = "Número de telefone do funcionário", example = "11-94365-9632")
     private String telefone;
+    @Schema(description = "Região de vendas do funcionário", example = "Centro")
     private String regiao;
+    @Schema(description = "Cargo do funcionário", example = "Vendas")
     private String cargo;
+    @Schema(description = "Senha do funcionário", example = "maria123@")
     private String senha;
 
     public FuncionarioPatchDTO() {

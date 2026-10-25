@@ -1,5 +1,6 @@
 package com.construmoveis.backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -7,9 +8,11 @@ public class FuncionarioLoginDTO {
 
     @NotBlank
     @Email
+    @Schema(description = "Email do usuário", example = "maria@example.com")
     private String email;
 
     @NotBlank
+    @Schema(description = "Senha do usuário", example = "maria123@")
     private String senha;
 
     public FuncionarioLoginDTO() {
