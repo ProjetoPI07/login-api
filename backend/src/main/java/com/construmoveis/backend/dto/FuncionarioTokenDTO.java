@@ -1,9 +1,16 @@
 package com.construmoveis.backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(hidden = true)
 public class FuncionarioTokenDTO {
+    @Schema(description = "Identificador do funcionário", example = "1")
     private Integer userId;
+    @Schema(description = "Nome do funcionário", example = "Maria Lima")
     private String nome;
+    @Schema(description = "Email do funcionário", example = "maria@example.com")
     private String email;
+    @Schema(description = "Token gerado pelo JWT")
     private String token;
 
     public FuncionarioTokenDTO() {

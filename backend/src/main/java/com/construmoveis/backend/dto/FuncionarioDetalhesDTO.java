@@ -1,6 +1,7 @@
 package com.construmoveis.backend.dto;
 
 import com.construmoveis.backend.entity.Funcionario;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Schema(hidden = true)
 public class FuncionarioDetalhesDTO implements UserDetails {
 
     private final String nome;
